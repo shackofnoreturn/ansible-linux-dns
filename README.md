@@ -9,4 +9,4 @@
 
 
 ## Todo
-[ ] Set up README.md
+- [ ] Set up README.md
