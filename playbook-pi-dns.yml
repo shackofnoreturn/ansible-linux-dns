@@ -1,6 +1,6 @@
 ---
 - name: Provision DNS Server
-  hosts: "{{ target_host }}"
+  hosts: all
   become: true
 
   roles:
