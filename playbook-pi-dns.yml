@@ -1,0 +1,11 @@
+---
+- name: Provision DNS Server
+  hosts: "{{ target_host }}"
+  become: true
+
+  roles:
+    - dns-base
+    # - network-static
+    # - unbound
+    # - pihole
+    # - chrony

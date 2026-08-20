@@ -1,0 +1,20 @@
+---
+# DNS cluster
+dns_virtual_ip: 10.0.0.5
+dns_primary_ip: 10.0.0.6
+dns_secondary_ip: 10.0.0.7
+dns_interface: eth0
+
+# Host network configuration
+dns_netmask: 255.255.255.0
+dns_gateway: 10.0.0.1
+
+# DNSµ
+dns_domain: home.arpa
+dns_listen_port: 53
+
+# Unbound
+unbound_port: 5335
+
+# Pi-hole
+pihole_web_port: 80

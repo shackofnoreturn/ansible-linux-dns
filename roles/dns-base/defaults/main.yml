@@ -1,0 +1,10 @@
+---
+dns_base_packages:
+  - curl
+  - vim
+  - ca-certificates
+  - gnupg
+  - sudo
+  - unzip
+  - rsync
+  - git
