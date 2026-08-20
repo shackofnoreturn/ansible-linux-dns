@@ -1,4 +1,23 @@
 ---
+- name: Check effective user
+  ansible.builtin.command: id
+  register: dns_effective_user
+  changed_when: false
+
+- name: Show effective user
+  ansible.builtin.debug:
+    var: dns_effective_user.stdout
+
+- name: Test privilege escalation
+  ansible.builtin.command: whoami
+  become: true
+  register: become_test
+  changed_when: false
+
+- name: Show privilege escalation result
+  ansible.builtin.debug:
+    var: become_test.stdout
+
 - name: Update apt cache
   ansible.builtin.apt:
     update_cache: true
