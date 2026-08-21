@@ -1,0 +1,39 @@
+---
+- name: Install Unbound
+  ansible.builtin.apt:
+    name: "{{ unbound_package_name }}"
+    state: present
+    update_cache: true
+
+- name: Ensure Unbound configuration directory exists
+  ansible.builtin.file:
+    path: "{{ unbound_config_dir }}/unbound.conf.d"
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+
+- name: Download root hints
+  ansible.builtin.get_url:
+    url: "{{ unbound_root_hints_url }}"
+    dest: "{{ unbound_root_hints_file }}"
+    owner: root
+    group: root
+    mode: "0644"
+  notify: Restart Unbound
+
+- name: Deploy Unbound configuration
+  ansible.builtin.template:
+    src: unbound.conf.j2
+    dest: "{{ unbound_config_file }}"
+    owner: root
+    group: root
+    mode: "0644"
+    validate: "unbound-checkconf %s"
+  notify: Restart Unbound
+
+- name: Ensure Unbound is enabled and started
+  ansible.builtin.service:
+    name: unbound
+    enabled: true
+    state: started

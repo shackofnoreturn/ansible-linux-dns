@@ -1,0 +1,54 @@
+server:
+  # Network
+  interface: {{ unbound_listen_address }}
+  port: {{ unbound_port }}
+
+  # IPv4 / IPv6
+  do-ip4: yes
+  do-ip6: no
+
+  # DNSSEC
+  auto-trust-anchor-file: "/var/lib/unbound/root.key"
+
+  # Root hints
+  root-hints: "{{ unbound_root_hints_file }}"
+
+  # Privacy
+  hide-identity: yes
+  hide-version: yes
+
+  # Security
+  harden-glue: yes
+  harden-dnssec-stripped: yes
+  harden-below-nxdomain: yes
+  harden-referral-path: yes
+
+  # Performance
+  prefetch: yes
+  prefetch-key: yes
+  serve-expired: yes
+  serve-expired-ttl: 86400
+
+  # Cache
+  cache-min-ttl: 3600
+  cache-max-ttl: 86400
+
+  # Access control
+  access-control: 127.0.0.0/8 allow
+
+  # Logging
+  verbosity: 1
+  log-queries: no
+  log-replies: no
+  log-servfail: yes
+
+  # DNS protocol
+  do-daemonize: no
+  use-syslog: yes
+
+  # Privacy / performance
+  rrset-roundrobin: yes
+  minimal-responses: yes
+
+  # Randomize source ports
+  use-caps-for-id: yes

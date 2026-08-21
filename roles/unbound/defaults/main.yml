@@ -1,0 +1,13 @@
+---
+unbound_package_name: unbound
+
+unbound_listen_address: "127.0.0.1"
+unbound_port: 5335
+
+unbound_config_dir: /etc/unbound
+unbound_config_file: "{{ unbound_config_dir }}/unbound.conf.d/dns.conf"
+
+unbound_root_hints_url: "https://www.internic.net/domain/named.root"
+unbound_root_hints_file: "{{ unbound_config_dir }}/root.hints"
+
+unbound_username: unbound
