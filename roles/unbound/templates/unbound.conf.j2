@@ -7,9 +7,6 @@ server:
   do-ip4: yes
   do-ip6: no
 
-  # DNSSEC
-  auto-trust-anchor-file: "/var/lib/unbound/root.key"
-
   # Root hints
   root-hints: "{{ unbound_root_hints_file }}"
 
