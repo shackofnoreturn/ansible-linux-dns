@@ -1,0 +1,21 @@
+---
+pihole_install_url: "https://install.pi-hole.net"
+
+pihole_web_port: 80
+
+pihole_dns_listening_mode: "local"
+
+pihole_interface: "{{ dns_interface }}"
+
+pihole_upstream_dns:
+  - "127.0.0.1#{{ unbound_port }}"
+
+pihole_domain: "{{ dns_domain }}"
+
+pihole_dnsmasq_listening: "single"
+
+pihole_query_logging: true
+
+pihole_webserver: true
+
+pihole_webserver_interface: "{{ dns_interface }}"

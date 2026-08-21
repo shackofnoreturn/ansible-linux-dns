@@ -1,0 +1,24 @@
+---
+- name: Check whether Pi-hole is already installed
+  ansible.builtin.stat:
+    path: /etc/pihole/pihole.toml
+  register: pihole_config
+
+- name: Download Pi-hole installer
+  ansible.builtin.get_url:
+    url: "{{ pihole_install_url }}"
+    dest: /tmp/install-pihole.sh
+    mode: "0755"
+  when: not pihole_config.stat.exists
+
+- name: Install Pi-hole
+  ansible.builtin.command:
+    cmd: /tmp/install-pihole.sh --unattended
+  environment:
+    PIHOLE_SKIP_OS_CHECK: "true"
+  when: not pihole_config.stat.exists
+
+- name: Remove Pi-hole installer
+  ansible.builtin.file:
+    path: /tmp/install-pihole.sh
+    state: absent

@@ -6,5 +6,5 @@
   roles:
     - dns-base
     - unbound
-    # - pihole
+    - pihole
     # - chrony

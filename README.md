@@ -4,11 +4,11 @@
 ## What
 - Base packages
 - Unbound
+- Pihole
 
 ## How
 
  
 ## Todo
-- [ ] pihole
 - [ ] chrony
 - [ ] gravity sync
