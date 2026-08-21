@@ -8,3 +8,4 @@ dns_base_packages:
   - unzip
   - rsync
   - git
+  - dnsutils
