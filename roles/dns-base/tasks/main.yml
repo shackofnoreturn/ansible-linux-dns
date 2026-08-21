@@ -1,12 +1,8 @@
 ---
-- name: Update apt cache
+- name: Install base packages
   ansible.builtin.apt:
-    update_cache: true
-
-# - name: Install base packages
-#   ansible.builtin.apt:
-#     name: "{{ dns_base_packages }}"
-#     state: present
+    name: "{{ dns_base_packages }}"
+    state: present
 
 # - name: Set timezone
 #   community.general.timezone:
