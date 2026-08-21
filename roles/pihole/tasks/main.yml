@@ -1,24 +1,64 @@
 ---
-- name: Check whether Pi-hole is already installed
+- name: Create Pi-hole group
+  ansible.builtin.group:
+    name: "{{ pihole_group }}"
+    state: present
+
+- name: Create Pi-hole user
+  ansible.builtin.user:
+    name: "{{ pihole_user }}"
+    group: "{{ pihole_group }}"
+    home: "/home/{{ pihole_user }}"
+    shell: "/usr/sbin/nologin"
+    password: "*"
+    create_home: true
+    state: present
+
+- name: Create Pi-hole configuration directory
+  ansible.builtin.file:
+    path: "{{ pihole_config_dir }}"
+    state: directory
+    owner: "{{ pihole_user }}"
+    group: "{{ pihole_group }}"
+    mode: "0755"
+
+- name: Check whether Pi-hole is installed
   ansible.builtin.stat:
-    path: /etc/pihole/pihole.toml
-  register: pihole_config
+    path: /etc/systemd/system/pihole-FTL.service
+  register: pihole_service
+
+- name: Deploy Pi-hole v6 configuration
+  ansible.builtin.template:
+    src: pihole.toml.j2
+    dest: "{{ pihole_config_file }}"
+    owner: "{{ pihole_user }}"
+    group: "{{ pihole_group }}"
+    mode: "0644"
+  when: not pihole_service.stat.exists
 
 - name: Download Pi-hole installer
   ansible.builtin.get_url:
     url: "{{ pihole_install_url }}"
     dest: /tmp/install-pihole.sh
+    owner: root
+    group: root
     mode: "0755"
-  when: not pihole_config.stat.exists
+  when: not pihole_service.stat.exists
 
 - name: Install Pi-hole
   ansible.builtin.command:
     cmd: /tmp/install-pihole.sh --unattended
   environment:
-    PIHOLE_SKIP_OS_CHECK: "true"
-  when: not pihole_config.stat.exists
+    DEBIAN_FRONTEND: noninteractive
+  when: not pihole_service.stat.exists
 
 - name: Remove Pi-hole installer
   ansible.builtin.file:
     path: /tmp/install-pihole.sh
     state: absent
+
+- name: Ensure Pi-hole FTL is enabled and started
+  ansible.builtin.systemd:
+    name: pihole-FTL
+    enabled: true
+    state: started

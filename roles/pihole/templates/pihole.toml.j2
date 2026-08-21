@@ -1,0 +1,23 @@
+[dns]
+
+# Listen on the normal DNS port.
+port = 53
+
+# Use the Unbound resolver running locally.
+upstreams = [
+    "{{ pihole_upstream_dns[0] }}"
+]
+
+# Listen on the configured network interface and localhost.
+listeningMode = "all"
+
+# DNS query logging.
+queryLogging = {{ pihole_query_logging | lower }}
+
+# Privacy level.
+privacyLevel = {{ pihole_privacy_level }}
+
+[webserver]
+
+# Pi-hole web interface.
+port = {{ pihole_web_port }}
