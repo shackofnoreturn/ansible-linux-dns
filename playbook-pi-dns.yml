@@ -5,7 +5,6 @@
 
   roles:
     - dns-base
-    # - network-static
     # - unbound
     # - pihole
     # - chrony
