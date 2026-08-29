@@ -27,7 +27,7 @@ vrrp_instance VI_DNS {
     }
 
     virtual_ipaddress {
-        {{ keepalived_vip }}/16
+        {{ keepalived_vip }}/24
     }
 
     track_script {

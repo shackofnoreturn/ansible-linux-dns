@@ -6,22 +6,6 @@
   changed_when: false
   check_mode: false
 
-- name: Enable Pi-hole DHCP
-  ansible.builtin.command:
-    cmd: pihole-FTL --config dhcp.active true
-  when:
-    - pihole_dhcp_enabled | bool
-    - "'dhcp.active = true' not in pihole_config.stdout"
-  notify: Restart Pi-hole
-
-- name: Disable Pi-hole DHCP
-  ansible.builtin.command:
-    cmd: pihole-FTL --config dhcp.active false
-  when:
-    - not pihole_dhcp_enabled | bool
-    - "'dhcp.active = true' in pihole_config.stdout"
-  notify: Restart Pi-hole
-
 - name: Configure DHCP start address
   ansible.builtin.command:
     cmd: "pihole-FTL --config dhcp.start {{ pihole_dhcp_start }}"
@@ -60,4 +44,20 @@
   when:
     - pihole_dhcp_enabled | bool
     - "'dhcp.leaseTime = ' ~ pihole_dhcp_lease_time not in pihole_config.stdout"
+  notify: Restart Pi-hole
+
+- name: Enable Pi-hole DHCP
+  ansible.builtin.command:
+    cmd: pihole-FTL --config dhcp.active true
+  when:
+    - pihole_dhcp_enabled | bool
+    - "'dhcp.active = true' not in pihole_config.stdout"
+  notify: Restart Pi-hole
+
+- name: Disable Pi-hole DHCP
+  ansible.builtin.command:
+    cmd: pihole-FTL --config dhcp.active false
+  when:
+    - not pihole_dhcp_enabled | bool
+    - "'dhcp.active = true' in pihole_config.stdout"
   notify: Restart Pi-hole
