@@ -1,5 +1,5 @@
 ---
-keepalived_vip: "10.0.0.5"
+keepalived_vip: "{{ dns_virtual_ip }}"
 
 keepalived_interface: "{{ dns_interface }}"
 

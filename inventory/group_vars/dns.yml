@@ -18,3 +18,8 @@ unbound_port: 5335
 
 # Pi-hole
 pihole_web_port: 80
+pihole_dhcp_start: "10.0.0.100"
+pihole_dhcp_end: "10.0.0.250"
+pihole_dhcp_router: "10.0.0.1"
+pihole_dhcp_netmask: "255.255.255.0"
+pihole_dhcp_lease_time: "24h"

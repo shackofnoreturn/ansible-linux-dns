@@ -1,0 +1,63 @@
+---
+- name: Read current Pi-hole DHCP configuration
+  ansible.builtin.command:
+    cmd: pihole-FTL --config
+  register: pihole_config
+  changed_when: false
+  check_mode: false
+
+- name: Enable Pi-hole DHCP
+  ansible.builtin.command:
+    cmd: pihole-FTL --config dhcp.active true
+  when:
+    - pihole_dhcp_enabled | bool
+    - "'dhcp.active = true' not in pihole_config.stdout"
+  notify: Restart Pi-hole
+
+- name: Disable Pi-hole DHCP
+  ansible.builtin.command:
+    cmd: pihole-FTL --config dhcp.active false
+  when:
+    - not pihole_dhcp_enabled | bool
+    - "'dhcp.active = true' in pihole_config.stdout"
+  notify: Restart Pi-hole
+
+- name: Configure DHCP start address
+  ansible.builtin.command:
+    cmd: "pihole-FTL --config dhcp.start {{ pihole_dhcp_start }}"
+  when:
+    - pihole_dhcp_enabled | bool
+    - "'dhcp.start = ' ~ pihole_dhcp_start not in pihole_config.stdout"
+  notify: Restart Pi-hole
+
+- name: Configure DHCP end address
+  ansible.builtin.command:
+    cmd: "pihole-FTL --config dhcp.end {{ pihole_dhcp_end }}"
+  when:
+    - pihole_dhcp_enabled | bool
+    - "'dhcp.end = ' ~ pihole_dhcp_end not in pihole_config.stdout"
+  notify: Restart Pi-hole
+
+- name: Configure DHCP router
+  ansible.builtin.command:
+    cmd: "pihole-FTL --config dhcp.router {{ pihole_dhcp_router }}"
+  when:
+    - pihole_dhcp_enabled | bool
+    - "'dhcp.router = ' ~ pihole_dhcp_router not in pihole_config.stdout"
+  notify: Restart Pi-hole
+
+- name: Configure DHCP netmask
+  ansible.builtin.command:
+    cmd: "pihole-FTL --config dhcp.netmask {{ pihole_dhcp_netmask }}"
+  when:
+    - pihole_dhcp_enabled | bool
+    - "'dhcp.netmask = ' ~ pihole_dhcp_netmask not in pihole_config.stdout"
+  notify: Restart Pi-hole
+
+- name: Configure DHCP lease time
+  ansible.builtin.command:
+    cmd: "pihole-FTL --config dhcp.leaseTime {{ pihole_dhcp_lease_time }}"
+  when:
+    - pihole_dhcp_enabled | bool
+    - "'dhcp.leaseTime = ' ~ pihole_dhcp_lease_time not in pihole_config.stdout"
+  notify: Restart Pi-hole

@@ -62,3 +62,6 @@
     name: pihole-FTL
     enabled: true
     state: started
+
+- name: Configure Pi-hole DHCP
+  ansible.builtin.include_tasks: dhcp.yml
