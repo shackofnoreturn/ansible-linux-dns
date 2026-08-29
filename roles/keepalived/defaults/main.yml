@@ -1,0 +1,11 @@
+---
+keepalived_vip: "10.0.0.5"
+
+keepalived_interface: "{{ dns_interface }}"
+
+keepalived_router_id: 51
+
+keepalived_auth_type: "PASS"
+keepalived_auth_pass: "dnscluster"
+
+keepalived_check_script: "/usr/local/bin/check-pihole.sh"

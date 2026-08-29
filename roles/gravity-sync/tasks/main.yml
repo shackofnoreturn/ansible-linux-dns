@@ -1,0 +1,28 @@
+---
+- name: Determine whether this host is the Gravity Sync source
+  ansible.builtin.set_fact:
+    gravity_sync_is_source: "{{ inventory_hostname == gravity_sync_source_host }}"
+
+- name: Install Gravity Sync dependencies
+  ansible.builtin.apt:
+    name:
+      - git
+      - rsync
+      - openssh-client
+    state: present
+    update_cache: true
+  when: gravity_sync_is_source
+
+- name: Clone Gravity Sync
+  ansible.builtin.git:
+    repo: "{{ gravity_sync_repo }}"
+    dest: "{{ gravity_sync_install_dir }}"
+    version: master
+    update: true
+  when: gravity_sync_is_source
+
+- name: Check Gravity Sync installation
+  ansible.builtin.stat:
+    path: "{{ gravity_sync_install_dir }}/gravity-sync"
+  register: gravity_sync_binary
+  when: gravity_sync_is_source

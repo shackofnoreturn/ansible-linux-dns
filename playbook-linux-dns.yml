@@ -7,4 +7,5 @@
     - dns-base
     - unbound
     - pihole
+    - keepalived
     # - chrony

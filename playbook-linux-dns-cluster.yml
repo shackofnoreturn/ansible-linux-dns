@@ -1,0 +1,7 @@
+---
+- name: Configure DNS cluster
+  hosts: dns
+
+  roles:
+    - gravity-sync
+    - keepalived

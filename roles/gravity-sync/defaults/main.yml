@@ -1,0 +1,12 @@
+---
+gravity_sync_repo: "https://github.com/vmstan/gravity-sync.git"
+
+gravity_sync_install_dir: "/opt/gravity-sync"
+
+gravity_sync_source_host: "shack-dns-p001"
+
+gravity_sync_source_ip: "10.0.0.6"
+
+gravity_sync_target_ip: "10.0.0.7"
+
+gravity_sync_user: "root"
