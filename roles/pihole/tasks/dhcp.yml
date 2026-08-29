@@ -46,6 +46,23 @@
     - "'dhcp.leaseTime = ' ~ pihole_dhcp_lease_time not in pihole_config.stdout"
   notify: Restart Pi-hole
 
+- name: Read current Pi-hole dnsmasq configuration
+  ansible.builtin.command:
+    cmd: pihole-FTL --config misc.dnsmasq_lines
+  register: pihole_dnsmasq_config
+  changed_when: false
+  check_mode: false
+
+- name: Configure DHCP DNS server
+  ansible.builtin.command:
+    cmd: >-
+      pihole-FTL --config misc.dnsmasq_lines
+      '["dhcp-option=6,{{ pihole_dhcp_dns }}"]'
+  when:
+    - pihole_dhcp_enabled | bool
+    - "'dhcp-option=6,' ~ pihole_dhcp_dns not in pihole_dnsmasq_config.stdout"
+  notify: Restart Pi-hole
+
 - name: Enable Pi-hole DHCP
   ansible.builtin.command:
     cmd: pihole-FTL --config dhcp.active true
