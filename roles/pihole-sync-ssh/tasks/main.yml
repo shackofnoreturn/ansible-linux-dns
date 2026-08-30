@@ -60,12 +60,21 @@
       {{ pihole_sync_destination_user }} ALL=(pihole) NOPASSWD: /usr/bin/pihole-FTL sqlite3_rsync *
     validate: "/usr/sbin/visudo -cf %s"
 
-- name: Configure SSH known_hosts for destination
+- name: Scan destination SSH host key
+  ansible.builtin.command:
+    cmd: "ssh-keyscan -t ed25519 {{ pihole_sync_destination_host }}"
+  register: pihole_sync_host_key
+  changed_when: false
+  when: pihole_sync_source | bool
+
+- name: Ensure destination SSH host key is known
   ansible.builtin.known_hosts:
     path: "{{ pihole_sync_ssh_directory }}/known_hosts"
     name: "{{ pihole_sync_destination_host }}"
-    key: "{{ lookup('pipe', 'ssh-keyscan -t ed25519 ' ~ pihole_sync_destination_host) }}"
+    key: "{{ pihole_sync_host_key.stdout }}"
     state: present
   become: true
   become_user: "{{ pihole_sync_source_user }}"
-  when: pihole_sync_source | bool
+  when:
+    - pihole_sync_source | bool
+    - pihole_sync_host_key.stdout | length > 0
