@@ -9,13 +9,11 @@
 - name: Build desired Pi-hole DNS hosts
   ansible.builtin.set_fact:
     pihole_dns_hosts_desired: >-
-      {{
-        pihole_dns_records
-        | map(attribute='address')
-        | zip(pihole_dns_records | map(attribute='hostnames'))
-        | map('join', ' ')
-        | list
-      }}
+      {%- set entries = [] -%}
+      {%- for record in pihole_dns_records -%}
+      {%- set _ = entries.append(record.address ~ ' ' ~ (record.hostnames | join(' '))) -%}
+      {%- endfor -%}
+      {{ entries }}
 
 - name: Configure Pi-hole DNS hosts
   ansible.builtin.command:
