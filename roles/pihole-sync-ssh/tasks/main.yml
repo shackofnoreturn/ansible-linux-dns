@@ -1,5 +1,5 @@
 ---
-- name: Create SSH directory for Pi-hole sync user
+- name: Create SSH directory for sync user
   ansible.builtin.file:
     path: "{{ pihole_sync_ssh_directory }}"
     state: directory
@@ -7,7 +7,7 @@
     group: "{{ pihole_sync_user }}"
     mode: "0700"
 
-- name: Generate Pi-hole sync SSH key
+- name: Generate Gravity synchronization SSH key
   community.crypto.openssh_keypair:
     path: "{{ pihole_sync_ssh_private_key }}"
     type: ed25519
@@ -16,23 +16,13 @@
     mode: "0600"
     comment: "Pi-hole Gravity synchronization"
 
-- name: Read sync public key
+- name: Read synchronization public key
   ansible.builtin.slurp:
     src: "{{ pihole_sync_ssh_public_key }}"
   register: pihole_sync_public_key
   when: pihole_sync_source | bool
 
-- name: Create destination SSH directory
-  ansible.builtin.file:
-    path: "{{ pihole_sync_ssh_directory }}"
-    state: directory
-    owner: "{{ pihole_sync_destination_user }}"
-    group: "{{ pihole_sync_destination_user }}"
-    mode: "0700"
-  delegate_to: "{{ pihole_sync_destination_host }}"
-  when: pihole_sync_source | bool
-
-- name: Install sync public key on destination
+- name: Install synchronization public key on destination
   ansible.posix.authorized_key:
     user: "{{ pihole_sync_destination_user }}"
     key: "{{ pihole_sync_public_key.content | b64decode }}"
@@ -40,3 +30,19 @@
     comment: "Pi-hole Gravity synchronization"
   delegate_to: "{{ pihole_sync_destination_host }}"
   when: pihole_sync_source | bool
+
+- name: Allow synchronization user to run sqlite3_rsync as pihole
+  ansible.builtin.copy:
+    dest: "/etc/sudoers.d/pihole-gravity-sync"
+    content: |
+      {{ pihole_sync_user }} ALL=(pihole) NOPASSWD: /usr/bin/pihole-FTL sqlite3_rsync *
+    owner: root
+    group: root
+    mode: "0440"
+    validate: "/usr/sbin/visudo -cf %s"
+
+- name: Verify sudo configuration
+  ansible.builtin.command:
+    cmd: "sudo -n -u pihole pihole-FTL sqlite3_rsync --help"
+  become: false
+  changed_when: false
