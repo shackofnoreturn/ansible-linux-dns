@@ -12,7 +12,7 @@
       {{
         pihole_dns_records
         | map(attribute='address')
-        | zip(pihole_dns_records | map(attribute='name'))
+        | zip(pihole_dns_records | map(attribute='hostnames'))
         | map('join', ' ')
         | list
       }}

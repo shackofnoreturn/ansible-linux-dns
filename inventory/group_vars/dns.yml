@@ -35,14 +35,20 @@ pihole_sync_destination_host: "shack-dns-p002"
 
 # DNS Records
 pihole_dns_records:
-  - name: nas.lan
-    address: 10.0.0.20
+  - address: 10.0.0.20
+    hostnames:
+      - nas.lan
+      - nas
 
-  - name: proxmox.lan
-    address: 10.0.0.30
+  - address: 10.0.0.30
+    hostnames:
+      - proxmox.lan
+      - proxmox
 
-  - name: jellyfin.lan
-    address: 10.0.0.40
+  - address: 10.0.0.40
+    hostnames:
+      - jellyfin.lan
+      - jellyfin
 
 # Keepalived
 keepalived_vip: "{{ dns_virtual_ip }}"
