@@ -25,6 +25,6 @@
       - dns.hosts
       - "{{ pihole_dns_hosts_desired | to_json }}"
   when:
-    - (pihole_dns_hosts_current.stdout | trim) !=
-      (pihole_dns_hosts_desired | to_json)
+    - pihole_dns_hosts_current.stdout | trim !=
+      ('[ ' ~ pihole_dns_hosts_desired | join(', ') ~ ' ]')
   notify: Restart Pi-hole
