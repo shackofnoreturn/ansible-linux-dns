@@ -11,19 +11,25 @@ vrrp_script check_pihole {
 }
 
 vrrp_instance VI_DNS {
-    state {{ 'MASTER' if dns_keepalived_priority | int >= 200 else 'BACKUP' }}
+    state {{ keepalived_state }}
 
     interface {{ keepalived_interface }}
 
     virtual_router_id {{ keepalived_router_id }}
 
-    priority {{ dns_keepalived_priority }}
+    priority {{ keepalived_priority }}
 
     advert_int 1
 
     authentication {
         auth_type {{ keepalived_auth_type }}
         auth_pass {{ keepalived_auth_pass }}
+    }
+
+    unicast_src_ip {{ ansible_host }}
+
+    unicast_peer {
+        {{ keepalived_peer_ip }}
     }
 
     virtual_ipaddress {

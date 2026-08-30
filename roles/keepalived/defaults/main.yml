@@ -1,9 +1,12 @@
 ---
 keepalived_vip: "{{ dns_virtual_ip }}"
-
 keepalived_interface: "{{ dns_interface }}"
 
 keepalived_router_id: 51
+
+keepalived_state: "BACKUP"
+keepalived_priority: 100
+keepalived_peer_ip: ""
 
 keepalived_auth_type: "PASS"
 keepalived_auth_pass: "dnscluster"

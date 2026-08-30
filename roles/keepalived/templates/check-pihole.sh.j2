@@ -1,14 +1,19 @@
 #!/bin/bash
 
+set -u
+
+# Pi-hole FTL must be running
 if ! systemctl is-active --quiet pihole-FTL; then
     exit 1
 fi
 
+# Something must be listening on DNS port 53
 if ! ss -lntup | grep -q ':53 '; then
     exit 1
 fi
 
-if ! dig @127.0.0.1 example.com +time=2 +tries=1 >/dev/null 2>&1; then
+# Pi-hole must successfully resolve an external domain
+if ! /usr/bin/dig @127.0.0.1 example.com A +time=2 +tries=1 >/dev/null 2>&1; then
     exit 1
 fi
 

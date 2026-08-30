@@ -9,7 +9,7 @@ dns_interface: eth0
 dns_netmask: 255.255.255.0
 dns_gateway: 10.0.0.1
 
-# DNSµ
+# DNS
 dns_domain: home.arpa
 dns_listen_port: 53
 
@@ -32,3 +32,12 @@ pihole_sync_destination: "10.0.0.7"
 pihole_sync_user: "pihole"
 pihole_sync_ssh_key: "/var/lib/pihole/.ssh/gravity_sync"
 pihole_sync_destination_host: "shack-dns-p002"
+
+# Keepalived
+keepalived_vip: "{{ dns_virtual_ip }}"
+keepalived_interface: "{{ dns_interface }}"
+keepalived_router_id: 51
+
+keepalived_auth_type: "PASS"
+keepalived_auth_pass: "dnscluster"
+keepalived_check_script: "/usr/local/bin/check-pihole.sh"
