@@ -60,6 +60,7 @@
       {{ pihole_sync_destination_user }} ALL=(pihole) NOPASSWD: /usr/bin/pihole-FTL sqlite3_rsync *
     validate: "/usr/sbin/visudo -cf %s"
 
+```yaml
 - name: Scan destination SSH host key
   ansible.builtin.command:
     cmd: "ssh-keyscan -t ed25519 {{ pihole_sync_destination_host }}"
@@ -67,14 +68,29 @@
   changed_when: false
   when: pihole_sync_source | bool
 
-- name: Ensure destination SSH host key is known
+- name: Ensure destination SSH directory exists
+  ansible.builtin.file:
+    path: "{{ pihole_sync_ssh_directory }}"
+    state: directory
+    owner: "{{ pihole_sync_source_user }}"
+    group: "{{ pihole_sync_source_user }}"
+    mode: "0700"
+  when: pihole_sync_source | bool
+
+- name: Install destination SSH host key
   ansible.builtin.known_hosts:
     path: "{{ pihole_sync_ssh_directory }}/known_hosts"
     name: "{{ pihole_sync_destination_host }}"
     key: "{{ pihole_sync_host_key.stdout }}"
     state: present
-  become: true
-  become_user: "{{ pihole_sync_source_user }}"
   when:
     - pihole_sync_source | bool
     - pihole_sync_host_key.stdout | length > 0
+
+- name: Set known_hosts ownership
+  ansible.builtin.file:
+    path: "{{ pihole_sync_ssh_directory }}/known_hosts"
+    owner: "{{ pihole_sync_source_user }}"
+    group: "{{ pihole_sync_source_user }}"
+    mode: "0600"
+  when: pihole_sync_source | bool
