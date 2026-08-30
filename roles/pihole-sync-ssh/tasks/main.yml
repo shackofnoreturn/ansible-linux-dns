@@ -60,7 +60,6 @@
       {{ pihole_sync_destination_user }} ALL=(pihole) NOPASSWD: /usr/bin/pihole-FTL sqlite3_rsync *
     validate: "/usr/sbin/visudo -cf %s"
 
-```yaml
 - name: Scan destination SSH host key
   ansible.builtin.command:
     cmd: "ssh-keyscan -t ed25519 {{ pihole_sync_destination_host }}"
