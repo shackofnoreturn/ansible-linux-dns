@@ -1,0 +1,15 @@
+#!/bin/sh
+
+set -eu
+
+SOURCE_DB="/etc/pihole/gravity.db"
+DESTINATION="shackadmin@10.0.0.7:/etc/pihole/gravity.db"
+
+SSH="/usr/local/sbin/pihole-gravity-ssh"
+RSYNC="/usr/local/sbin/pihole-sqlite3-rsync"
+
+exec /usr/bin/pihole-FTL sqlite3_rsync \
+  --ssh "$SSH" \
+  --exe "$RSYNC" \
+  "$SOURCE_DB" \
+  "$DESTINATION"

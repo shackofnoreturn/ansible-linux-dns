@@ -93,3 +93,40 @@
     group: "{{ pihole_sync_source_user }}"
     mode: "0600"
   when: pihole_sync_source | bool
+
+- name: Install Gravity synchronization script
+  ansible.builtin.template:
+    src: pihole-gravity-sync.sh.j2
+    dest: /usr/local/sbin/pihole-gravity-sync
+    owner: root
+    group: root
+    mode: "0755"
+  when: pihole_sync_source | bool
+
+- name: Install Gravity synchronization systemd service
+  ansible.builtin.template:
+    src: pihole-gravity-sync.service.j2
+    dest: /etc/systemd/system/pihole-gravity-sync.service
+    owner: root
+    group: root
+    mode: "0644"
+  when: pihole_sync_source | bool
+  notify: Reload systemd
+
+- name: Install Gravity synchronization systemd timer
+  ansible.builtin.template:
+    src: pihole-gravity-sync.timer.j2
+    dest: /etc/systemd/system/pihole-gravity-sync.timer
+    owner: root
+    group: root
+    mode: "0644"
+  when: pihole_sync_source | bool
+  notify: Reload systemd
+
+- name: Enable Gravity synchronization timer
+  ansible.builtin.systemd:
+    name: pihole-gravity-sync.timer
+    enabled: true
+    state: started
+    daemon_reload: true
+  when: pihole_sync_source | bool
