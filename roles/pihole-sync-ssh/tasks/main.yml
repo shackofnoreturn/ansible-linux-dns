@@ -3,16 +3,16 @@
   ansible.builtin.file:
     path: "{{ pihole_sync_ssh_directory }}"
     state: directory
-    owner: "{{ pihole_sync_user }}"
-    group: "{{ pihole_sync_user }}"
+    owner: "{{ pihole_sync_ssh_user }}"
+    group: "{{ pihole_sync_ssh_user }}"
     mode: "0700"
 
 - name: Generate Gravity synchronization SSH key
   community.crypto.openssh_keypair:
     path: "{{ pihole_sync_ssh_private_key }}"
     type: ed25519
-    owner: "{{ pihole_sync_user }}"
-    group: "{{ pihole_sync_user }}"
+    owner: "{{ pihole_sync_ssh_user }}"
+    group: "{{ pihole_sync_ssh_user }}"
     mode: "0600"
     comment: "Pi-hole Gravity synchronization"
 
@@ -35,7 +35,7 @@
   ansible.builtin.copy:
     dest: "/etc/sudoers.d/pihole-gravity-sync"
     content: |
-      {{ pihole_sync_user }} ALL=(pihole) NOPASSWD: /usr/bin/pihole-FTL sqlite3_rsync *
+      {{ pihole_sync_ssh_user }} ALL=(pihole) NOPASSWD: /usr/bin/pihole-FTL sqlite3_rsync *
     owner: root
     group: root
     mode: "0440"
