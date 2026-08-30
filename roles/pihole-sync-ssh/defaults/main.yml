@@ -1,0 +1,9 @@
+---
+pihole_sync_user: "pihole"
+
+pihole_sync_ssh_directory: "/var/lib/pihole/.ssh"
+pihole_sync_ssh_private_key: "{{ pihole_sync_ssh_directory }}/gravity_sync"
+pihole_sync_ssh_public_key: "{{ pihole_sync_ssh_private_key }}.pub"
+
+pihole_sync_destination_host: "10.0.0.7"
+pihole_sync_destination_user: "pihole"

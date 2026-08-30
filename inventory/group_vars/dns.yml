@@ -18,9 +18,17 @@ unbound_port: 5335
 
 # Pi-hole
 pihole_web_port: 80
+
 pihole_dhcp_start: "10.0.0.100"
 pihole_dhcp_end: "10.0.0.250"
 pihole_dhcp_router: "10.0.0.1"
 pihole_dhcp_netmask: "255.255.255.0"
 pihole_dhcp_lease_time: "24h"
 pihole_dhcp_dns: "10.0.0.5"
+
+pihole_sync_enabled: true
+pihole_sync_source: "10.0.0.6"
+pihole_sync_destination: "10.0.0.7"
+pihole_sync_user: "pihole"
+pihole_sync_ssh_key: "/var/lib/pihole/.ssh/gravity_sync"
+pihole_sync_destination_host: "shack-dns-p002"

@@ -8,4 +8,4 @@
     - unbound
     - pihole
     - keepalived
-    # - chrony
+    - pihole-sync-ssh

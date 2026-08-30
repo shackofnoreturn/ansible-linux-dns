@@ -1,0 +1,43 @@
+---
+- name: Create SSH directory for Pi-hole sync user
+  ansible.builtin.file:
+    path: "{{ pihole_sync_ssh_directory }}"
+    state: directory
+    owner: "{{ pihole_sync_user }}"
+    group: "{{ pihole_sync_user }}"
+    mode: "0700"
+
+- name: Generate Pi-hole sync SSH key
+  community.crypto.openssh_keypair:
+    path: "{{ pihole_sync_ssh_private_key }}"
+    type: ed25519
+    owner: "{{ pihole_sync_user }}"
+    group: "{{ pihole_sync_user }}"
+    mode: "0600"
+    comment: "Pi-hole Gravity synchronization"
+  register: pihole_sync_key
+
+- name: Read sync public key
+  ansible.builtin.slurp:
+    src: "{{ pihole_sync_ssh_public_key }}"
+  register: pihole_sync_public_key
+  when: inventory_hostname == pihole_sync_source
+
+- name: Create destination SSH directory
+  ansible.builtin.file:
+    path: "{{ pihole_sync_ssh_directory }}"
+    state: directory
+    owner: "{{ pihole_sync_destination_user }}"
+    group: "{{ pihole_sync_destination_user }}"
+    mode: "0700"
+  delegate_to: "{{ pihole_sync_destination_host }}"
+  when: inventory_hostname == pihole_sync_source
+
+- name: Install sync public key on destination
+  ansible.posix.authorized_key:
+    user: "{{ pihole_sync_destination_user }}"
+    key: "{{ pihole_sync_public_key.content | b64decode }}"
+    state: present
+    comment: "Pi-hole Gravity synchronization"
+  delegate_to: "{{ pihole_sync_destination_host }}"
+  when: inventory_hostname == pihole_sync_source
