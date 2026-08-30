@@ -31,18 +31,33 @@
   delegate_to: "{{ pihole_sync_destination_host }}"
   when: pihole_sync_source | bool
 
-- name: Allow synchronization user to run sqlite3_rsync as pihole
+- name: Install remote sqlite3_rsync wrapper
+  ansible.builtin.copy:
+    dest: "{{ pihole_sync_remote_wrapper }}"
+    owner: root
+    group: root
+    mode: "0755"
+    content: |
+      #!/bin/sh
+      exec sudo -n -u {{ pihole_sync_service_user }} \
+        /usr/bin/pihole-FTL sqlite3_rsync "$@"
+
+- name: Configure restricted sudo access for Gravity synchronization
   ansible.builtin.copy:
     dest: "/etc/sudoers.d/pihole-gravity-sync"
-    content: |
-      {{ pihole_sync_ssh_user }} ALL=(pihole) NOPASSWD: /usr/bin/pihole-FTL sqlite3_rsync *
     owner: root
     group: root
     mode: "0440"
+    content: |
+      {{ pihole_sync_ssh_user }} ALL=(pihole) NOPASSWD: /usr/bin/pihole-FTL sqlite3_rsync *
     validate: "/usr/sbin/visudo -cf %s"
 
-- name: Verify sudo configuration
-  ansible.builtin.command:
-    cmd: "sudo -n -u pihole pihole-FTL sqlite3_rsync --help"
-  become: false
-  changed_when: false
+- name: Ensure SSH host key exists for destination
+  ansible.builtin.known_hosts:
+    path: "{{ pihole_sync_ssh_directory }}/known_hosts"
+    name: "{{ pihole_sync_destination_host }}"
+    key: "{{ lookup('pipe', 'ssh-keyscan -t ed25519 ' ~ pihole_sync_destination_host) }}"
+    state: present
+  become: true
+  become_user: "{{ pihole_sync_ssh_user }}"
+  when: pihole_sync_source | bool

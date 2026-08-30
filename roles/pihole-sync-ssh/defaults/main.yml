@@ -1,7 +1,6 @@
 ---
 pihole_sync_source: false
 
-# SSH transport
 pihole_sync_ssh_user: "shackadmin"
 pihole_sync_destination_user: "shackadmin"
 
@@ -9,11 +8,10 @@ pihole_sync_ssh_directory: "/home/shackadmin/.ssh"
 pihole_sync_ssh_private_key: "{{ pihole_sync_ssh_directory }}/pihole_gravity_sync"
 pihole_sync_ssh_public_key: "{{ pihole_sync_ssh_private_key }}.pub"
 
-# Pi-hole service account
-pihole_sync_service_user: "pihole"
-
-# Destination
 pihole_sync_destination_host: "shack-dns-p002"
 
-# Database
+pihole_sync_service_user: "pihole"
+
+pihole_sync_remote_wrapper: "/usr/local/sbin/pihole-sqlite3-rsync"
+
 pihole_sync_database: "/etc/pihole/gravity.db"
