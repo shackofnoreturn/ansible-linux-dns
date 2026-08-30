@@ -15,13 +15,12 @@
     group: "{{ pihole_sync_user }}"
     mode: "0600"
     comment: "Pi-hole Gravity synchronization"
-  register: pihole_sync_key
 
 - name: Read sync public key
   ansible.builtin.slurp:
     src: "{{ pihole_sync_ssh_public_key }}"
   register: pihole_sync_public_key
-  when: inventory_hostname == pihole_sync_source
+  when: pihole_sync_source | bool
 
 - name: Create destination SSH directory
   ansible.builtin.file:
@@ -31,7 +30,7 @@
     group: "{{ pihole_sync_destination_user }}"
     mode: "0700"
   delegate_to: "{{ pihole_sync_destination_host }}"
-  when: inventory_hostname == pihole_sync_source
+  when: pihole_sync_source | bool
 
 - name: Install sync public key on destination
   ansible.posix.authorized_key:
@@ -40,4 +39,4 @@
     state: present
     comment: "Pi-hole Gravity synchronization"
   delegate_to: "{{ pihole_sync_destination_host }}"
-  when: inventory_hostname == pihole_sync_source
+  when: pihole_sync_source | bool
