@@ -33,6 +33,17 @@ pihole_sync_user: "pihole"
 pihole_sync_ssh_key: "/var/lib/pihole/.ssh/gravity_sync"
 pihole_sync_destination_host: "shack-dns-p002"
 
+# DNS Records
+pihole_dns_records:
+  - name: nas.lan
+    address: 10.0.0.20
+
+  - name: proxmox.lan
+    address: 10.0.0.30
+
+  - name: jellyfin.lan
+    address: 10.0.0.40
+
 # Keepalived
 keepalived_vip: "{{ dns_virtual_ip }}"
 keepalived_interface: "{{ dns_interface }}"

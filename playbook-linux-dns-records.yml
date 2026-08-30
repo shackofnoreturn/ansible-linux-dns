@@ -1,0 +1,7 @@
+---
+- name: Configure Pi-hole DNS records
+  hosts: dns
+  become: true
+
+  roles:
+    - pihole-dns-records
