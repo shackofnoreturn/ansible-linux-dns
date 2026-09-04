@@ -50,6 +50,16 @@ pihole_dns_records:
       - jellyfin.lan
       - jellyfin
 
+  - address: 10.0.0.32
+    hostnames:
+      - traefik.dev.shackofnoreturn.com
+      - traefik.dev
+
+  - address: 10.0.0.32
+    hostnames:
+      - whoami.dev.shackofnoreturn.com
+      - whoami.dev
+
 # Keepalived
 keepalived_vip: "{{ dns_virtual_ip }}"
 keepalived_interface: "{{ dns_interface }}"
