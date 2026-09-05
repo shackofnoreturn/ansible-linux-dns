@@ -5,16 +5,20 @@ dns_primary_ip: 10.0.0.6
 dns_secondary_ip: 10.0.0.7
 dns_interface: eth0
 
+
 # Host network configuration
 dns_netmask: 255.255.255.0
 dns_gateway: 10.0.0.1
+
 
 # DNS
 dns_domain: home.arpa
 dns_listen_port: 53
 
+
 # Unbound
 unbound_port: 5335
+
 
 # Pi-hole
 pihole_web_port: 80
@@ -33,32 +37,6 @@ pihole_sync_user: "pihole"
 pihole_sync_ssh_key: "/var/lib/pihole/.ssh/gravity_sync"
 pihole_sync_destination_host: "shack-dns-p002"
 
-# DNS Records
-pihole_dns_records:
-  - address: 10.0.0.20
-    hostnames:
-      - nas.lan
-      - nas
-
-  - address: 10.0.0.30
-    hostnames:
-      - proxmox.lan
-      - proxmox
-
-  - address: 10.0.0.40
-    hostnames:
-      - jellyfin.lan
-      - jellyfin
-
-  - address: 10.0.0.32
-    hostnames:
-      - traefik.dev.shackofnoreturn.com
-      - traefik.dev
-
-  - address: 10.0.0.32
-    hostnames:
-      - whoami.dev.shackofnoreturn.com
-      - whoami.dev
 
 # Keepalived
 keepalived_vip: "{{ dns_virtual_ip }}"

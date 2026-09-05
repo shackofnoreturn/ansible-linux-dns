@@ -10,7 +10,7 @@
   ansible.builtin.set_fact:
     pihole_dns_hosts_desired: >-
       {%- set entries = [] -%}
-      {%- for record in pihole_dns_records -%}
+      {%- for record in dns_records -%}
       {%- set _ = entries.append(record.address ~ ' ' ~ (record.hostnames | join(' '))) -%}
       {%- endfor -%}
       {{ entries }}
